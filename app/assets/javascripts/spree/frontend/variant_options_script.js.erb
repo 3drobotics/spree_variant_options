@@ -169,8 +169,10 @@ function VariantOptions(params) {
   // Find matching variants for selected option value
   // Set price or price range if matching variants have different prices.
   function find_variant() {
-    var selected = divs.find('a.selected');
-    var variants = get_variant_objects(selected.get(0).rel);
+    var selected         = divs.find('a.selected');
+    var variants         = get_variant_objects(selected.get(0).rel);
+    var upgrade_appled   = $("#variant_upgrade_button").hasClass("selected");
+
     if (selected.length == divs.length) {
       return variant = variants[selection[0]];
     } else {
@@ -179,10 +181,12 @@ function VariantOptions(params) {
       prices = $.unique(prices).sort(function(a, b) {
         return to_f(a) < to_f(b) ? -1 : 1;
       });
-      if (prices.length == 1) {
-        $('#product-price .price').html('<span class="price assumed">' + prices[0] + '</span>');
-      } else {
-        $('#product-price .price').html('<span class="price from">' + prices[0] + '</span> - <span class="price to">' + prices[prices.length - 1] + '</span>');
+      if (!upgrade_appled) { //if an upgrade has been applied, deffer to the upgraded on page price 
+        if (prices.length == 1) {
+          $('#product-price .price').html('<span class="price assumed">' + prices[0] + '</span>');
+        } else {
+          $('#product-price .price').html('<span class="price from">' + prices[0] + '</span> - <span class="price to">' + prices[prices.length - 1] + '</span>');
+        }
       }
       return variants;
     }
